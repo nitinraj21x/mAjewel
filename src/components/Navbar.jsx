@@ -32,7 +32,9 @@ export default function Navbar() {
             className="flex items-baseline leading-none"
           >
             <span
-              className="script-brand text-crimson whitespace-nowrap"
+              className={`logo-brand script-brand whitespace-nowrap transition-colors duration-500 ${
+                scrolled ? "text-crimson" : "text-cream"
+              }`}
               style={{ fontSize: "clamp(1.1rem, 2.2vw, 1.6rem)", lineHeight: 1 }}
             >
               {brand.fullName}

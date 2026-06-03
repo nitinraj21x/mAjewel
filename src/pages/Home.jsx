@@ -18,10 +18,16 @@ import { fadeUp, fadeLeft, fadeRight, staggerContainer, staggerItem, inView, sca
 function HeroSection() {
   const [hovered, setHovered] = useState(false);
 
+  /* Touch devices: toggle on tap; pointer devices: follow mouse */
+  const handleToggle = () => setHovered(v => !v);
+  const handleEnter  = () => setHovered(true);
+  const handleLeave  = () => setHovered(false);
+
   return (
     <section
       className="relative w-full overflow-hidden"
-      style={{ height: "100svh" }}
+      /* svh fallback for older browsers */
+      style={{ height: "100svh", minHeight: "100vh" }}
     >
       {/* Full-screen video */}
       <video
@@ -34,49 +40,65 @@ function HeroSection() {
       <div
         className="absolute inset-x-0 bottom-0 pointer-events-none"
         style={{
-          height: "55%",
-          background: "linear-gradient(to top, rgba(10,8,4,0.88) 0%, rgba(10,8,4,0.45) 50%, transparent 100%)",
+          height: "60%",
+          background:
+            "linear-gradient(to top, rgba(10,8,4,0.92) 0%, rgba(10,8,4,0.5) 45%, transparent 100%)",
         }}
       />
 
-      {/* ── Bottom anchor — heading + hover reveal ── */}
-      <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center pb-12 px-4">
+      {/* ── Bottom anchor ── */}
+      <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center pb-10 sm:pb-14 px-4">
 
-        {/* Hover trigger wraps heading + reveal block */}
+        {/*
+          Hover/tap trigger.
+          – Desktop: mouseEnter / mouseLeave
+          – Touch:   onClick toggle
+        */}
         <div
-          className="w-full flex flex-col items-center cursor-default"
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
+          className="w-full max-w-screen-xl flex flex-col items-center"
+          onMouseEnter={handleEnter}
+          onMouseLeave={handleLeave}
+          onClick={handleToggle}
+          style={{ cursor: "default" }}
         >
 
-          {/* ── Reveal block: subheading + buttons, clip-path curtain ── */}
+          {/* ── Reveal block — clips from bottom (inset top → 0) ── */}
           <motion.div
             initial={false}
-            animate={hovered ? "open" : "closed"}
-            variants={{
-              open:   { clipPath: "inset(0% 0% 0% 0%)", opacity: 1 },
-              closed: { clipPath: "inset(100% 0% 0% 0%)", opacity: 0 },
-            }}
-            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full flex flex-col items-center mb-6 overflow-hidden"
+            animate={hovered
+              ? { clipPath: "inset(0% 0% 0% 0%)", opacity: 1, pointerEvents: "auto" }
+              : { clipPath: "inset(100% 0% 0% 0%)", opacity: 0, pointerEvents: "none" }
+            }
+            transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full flex flex-col items-center mb-5"
             style={{ willChange: "clip-path, opacity" }}
           >
             {/* Gold ornament line */}
             <motion.div
               initial={false}
-              animate={hovered ? { scaleX: 1, opacity: 1 } : { scaleX: 0.3, opacity: 0 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.18 }}
+              animate={hovered
+                ? { scaleX: 1, opacity: 1 }
+                : { scaleX: 0.2, opacity: 0 }
+              }
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.16 }}
               className="ornament mb-5"
-              style={{ width: "min(640px, 80vw)", transformOrigin: "center" }}
+              style={{ width: "min(600px, 80vw)", transformOrigin: "center" }}
             />
 
-            {/* Subheading — character stagger */}
+            {/* Subheading */}
             <motion.p
               initial={false}
-              animate={hovered ? { y: 0, opacity: 1, filter: "blur(0px)" } : { y: 12, opacity: 0, filter: "blur(6px)" }}
-              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
-              className="text-cream/80 text-center whitespace-nowrap mb-7"
-              style={{ fontSize: "clamp(0.72rem, 1.4vw, 1rem)", letterSpacing: "0.04em" }}
+              animate={hovered
+                ? { y: 0, opacity: 1, filter: "blur(0px)" }
+                : { y: 10, opacity: 0, filter: "blur(5px)" }
+              }
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+              className="hero-subheading text-cream/80 text-center mb-7 px-2"
+              style={{
+                fontSize: "clamp(0.65rem, 1.3vw, 0.95rem)",
+                letterSpacing: "0.04em",
+                whiteSpace: "nowrap",
+              }}
             >
               {hero.subheading}
             </motion.p>
@@ -84,43 +106,58 @@ function HeroSection() {
             {/* Buttons */}
             <motion.div
               initial={false}
-              animate={hovered ? { y: 0, opacity: 1 } : { y: 18, opacity: 0 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.22 }}
-              className="flex flex-row items-center gap-4"
+              animate={hovered
+                ? { y: 0, opacity: 1 }
+                : { y: 16, opacity: 0 }
+              }
+              transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+              className="flex flex-row flex-wrap justify-center items-center gap-3"
             >
-              <Link to={hero.cta1.href} className="btn-primary">
+              <Link to={hero.cta1.href} className="btn-primary" onClick={e => e.stopPropagation()}>
                 {hero.cta1.label}
                 <ArrowUpRight size={14} />
               </Link>
-              <Link to={hero.cta2.href} className="btn-ghost">
+              <Link to={hero.cta2.href} className="btn-ghost" onClick={e => e.stopPropagation()}>
                 {hero.cta2.label}
               </Link>
             </motion.div>
           </motion.div>
 
-          {/* ── Heading — always visible, nudges up on hover ── */}
+          {/* ── Heading — always visible ── */}
           <motion.h1
             initial={false}
-            animate={hovered ? { y: -6, color: "#D3af37" } : { y: 0, color: "#faf8ed" }}
-            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="text-center leading-none whitespace-nowrap select-none"
+            animate={hovered
+              ? { y: -5, color: "#D3af37" }
+              : { y: 0,  color: "#faf8ed" }
+            }
+            transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+            className="hero-h1 text-center leading-none select-none w-full"
             style={{
               fontFamily: '"Cormorant Garamond", Georgia, serif',
-              fontSize: "clamp(1.6rem, 5.2vw, 5.5rem)",
+              fontSize: "clamp(1.5rem, 5vw, 5.5rem)",
               fontWeight: 400,
               letterSpacing: "-0.01em",
+              whiteSpace: "nowrap",
+              overflowX: "visible",
             }}
           >
             {hero.heading}
           </motion.h1>
 
-          {/* Hover hint line under heading */}
+          {/* Underline hint */}
           <motion.div
             initial={false}
-            animate={hovered ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-3 h-px bg-gold/60"
-            style={{ width: "min(480px, 60vw)", transformOrigin: "center" }}
+            animate={hovered
+              ? { scaleX: 1, opacity: 1 }
+              : { scaleX: 0, opacity: 0 }
+            }
+            transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-3 h-px"
+            style={{
+              width: "min(440px, 55vw)",
+              background: "linear-gradient(90deg, transparent, rgba(211,175,55,0.7), transparent)",
+              transformOrigin: "center",
+            }}
           />
         </div>
       </div>

@@ -271,7 +271,37 @@ img, video { display: block; max-width: 100%; }
 }
 .float { animation: float 4s ease-in-out infinite; }
 
+/* ─── Hero overrides ─────────────────────────────────────────── */
+
+/* On small screens allow the subheading to wrap */
+@media (max-width: 639px) {
+  .hero-subheading {
+    white-space: normal !important;
+    text-align: center;
+    font-size: 0.72rem !important;
+  }
+  /* Scale heading down further on mobile */
+  .hero-h1 {
+    font-size: clamp(1.15rem, 6.5vw, 2.4rem) !important;
+  }
+}
+
+/* Prevent logo overflowing into hamburger on very small screens */
+@media (max-width: 380px) {
+  .logo-brand {
+    font-size: clamp(0.85rem, 4.5vw, 1.2rem) !important;
+  }
+}
+
 /* ─── Grain texture overlay ──────────────────────────────────── */
+.grain-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
 .grain-overlay::after {
   content: "";
   position: absolute;
