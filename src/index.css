@@ -231,25 +231,15 @@ img, video { display: block; max-width: 100%; }
 .nav-link:hover::after,
 .nav-link.active::after { transform: scaleX(1); }
 
-/* Scrolled header — light bg, dark text with white stroke for contrast on any section */
+/* Scrolled header — dark text with drop shadow for contrast on any section */
 .nav-scrolled .nav-link {
   color: rgba(61, 75, 42, 0.9);
-  text-shadow:
-    -0.4px -0.4px 0 rgba(255,255,255,0.8),
-     0.4px -0.4px 0 rgba(255,255,255,0.8),
-    -0.4px  0.4px 0 rgba(255,255,255,0.8),
-     0.4px  0.4px 0 rgba(255,255,255,0.8),
-    0 1px 4px rgba(255,255,255,0.6);
+  text-shadow: 0 1px 6px rgba(255,255,255,0.9), 0 0 12px rgba(255,255,255,0.7);
 }
 .nav-scrolled .nav-link:hover,
 .nav-scrolled .nav-link.active {
   color: var(--crimson);
-  text-shadow:
-    -0.4px -0.4px 0 rgba(255,255,255,0.8),
-     0.4px -0.4px 0 rgba(255,255,255,0.8),
-    -0.4px  0.4px 0 rgba(255,255,255,0.8),
-     0.4px  0.4px 0 rgba(255,255,255,0.8),
-    0 1px 4px rgba(255,255,255,0.5);
+  text-shadow: 0 1px 6px rgba(255,255,255,0.9), 0 0 12px rgba(255,255,255,0.7);
 }
 
 /* ─── Swiper overrides ───────────────────────────────────────── */
