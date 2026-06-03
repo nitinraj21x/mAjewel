@@ -34,14 +34,10 @@ export default function Footer() {
             <div className="space-y-6">
               <div>
                 <span
-                  className="script-brand text-gold block"
-                  style={{ fontSize: "clamp(2rem, 4vw, 3rem)", lineHeight: 1 }}
+                  className="script-brand text-gold block whitespace-nowrap"
+                  style={{ fontSize: "clamp(1.4rem, 2.8vw, 2.2rem)", lineHeight: 1.1 }}
                 >
-                  {brand.name}
-                </span>
-                <span className="block mt-1 text-cream/40 tracking-widest uppercase"
-                  style={{ fontSize: "0.55rem", letterSpacing: "0.3em" }}>
-                  {brand.tagline}
+                  {brand.fullName}
                 </span>
               </div>
               <p className="text-sm leading-7 text-cream/60 max-w-xs">

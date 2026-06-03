@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowDown, ArrowUpRight, ChevronRight } from "lucide-react";
+import { ArrowUpRight, ChevronRight } from "lucide-react";
 import SectionHeading from "../components/SectionHeading";
 import CollectionCard from "../components/CollectionCard";
 import JournalCard from "../components/JournalCard";
@@ -15,60 +16,77 @@ import { fadeUp, fadeLeft, fadeRight, staggerContainer, staggerItem, inView, sca
 
 /* ─── 1. Hero ─────────────────────────────────────────────────── */
 function HeroSection() {
+  const [hovered, setHovered] = useState(false);
+
   return (
-    <section className="relative min-h-svh flex flex-col overflow-hidden">
-      {/* Background video — sole hero background */}
-      <div className="absolute inset-0">
-        <video
-          className="w-full h-full object-cover"
-          src="/video/bannerVideo.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-forest/60 via-forest/40 to-forest/80" />
-        <div className="absolute inset-0 bg-gradient-to-r from-forest/50 via-transparent to-transparent" />
-      </div>
+    <section
+      className="relative w-full overflow-hidden"
+      style={{ height: "100svh" }}
+    >
+      {/* Full-screen video */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover"
+        src="/video/bannerVideo.mp4"
+        autoPlay muted loop playsInline preload="auto"
+      />
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col flex-1 shell pt-32 pb-16">
-        <div className="frame flex flex-col flex-1 justify-end">
-          <div className="max-w-4xl">
-            {/* Eyebrow */}
+      {/* Persistent vignette — always dark at bottom so heading reads */}
+      <div
+        className="absolute inset-x-0 bottom-0 pointer-events-none"
+        style={{
+          height: "55%",
+          background: "linear-gradient(to top, rgba(10,8,4,0.88) 0%, rgba(10,8,4,0.45) 50%, transparent 100%)",
+        }}
+      />
+
+      {/* ── Bottom anchor — heading + hover reveal ── */}
+      <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center pb-12 px-4">
+
+        {/* Hover trigger wraps heading + reveal block */}
+        <div
+          className="w-full flex flex-col items-center cursor-default"
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+        >
+
+          {/* ── Reveal block: subheading + buttons, clip-path curtain ── */}
+          <motion.div
+            initial={false}
+            animate={hovered ? "open" : "closed"}
+            variants={{
+              open:   { clipPath: "inset(0% 0% 0% 0%)", opacity: 1 },
+              closed: { clipPath: "inset(100% 0% 0% 0%)", opacity: 0 },
+            }}
+            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full flex flex-col items-center mb-6 overflow-hidden"
+            style={{ willChange: "clip-path, opacity" }}
+          >
+            {/* Gold ornament line */}
+            <motion.div
+              initial={false}
+              animate={hovered ? { scaleX: 1, opacity: 1 } : { scaleX: 0.3, opacity: 0 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.18 }}
+              className="ornament mb-5"
+              style={{ width: "min(640px, 80vw)", transformOrigin: "center" }}
+            />
+
+            {/* Subheading — character stagger */}
             <motion.p
-              {...fadeUp}
-              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="eyebrow text-gold/80 mb-6"
-            >
-              {hero.eyebrow}
-            </motion.p>
-
-            {/* Heading */}
-            <motion.h1
-              {...fadeUp}
-              transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="display-xl text-cream"
-              style={{ textWrap: "balance" }}
-            >
-              {hero.heading}
-            </motion.h1>
-
-            {/* Subheading */}
-            <motion.p
-              {...fadeUp}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-6 text-base sm:text-lg leading-8 text-cream/75 max-w-2xl"
+              initial={false}
+              animate={hovered ? { y: 0, opacity: 1, filter: "blur(0px)" } : { y: 12, opacity: 0, filter: "blur(6px)" }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
+              className="text-cream/80 text-center whitespace-nowrap mb-7"
+              style={{ fontSize: "clamp(0.72rem, 1.4vw, 1rem)", letterSpacing: "0.04em" }}
             >
               {hero.subheading}
             </motion.p>
 
-            {/* CTAs */}
+            {/* Buttons */}
             <motion.div
-              {...fadeUp}
-              transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-10 flex flex-col sm:flex-row gap-4"
+              initial={false}
+              animate={hovered ? { y: 0, opacity: 1 } : { y: 18, opacity: 0 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.22 }}
+              className="flex flex-row items-center gap-4"
             >
               <Link to={hero.cta1.href} className="btn-primary">
                 {hero.cta1.label}
@@ -78,40 +96,32 @@ function HeroSection() {
                 {hero.cta2.label}
               </Link>
             </motion.div>
-          </div>
-
-          {/* Scroll indicator */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.8 }}
-            className="mt-16 flex items-center gap-3 text-cream/40"
-          >
-            <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <ArrowDown size={16} />
-            </motion.div>
-            <span className="text-xs tracking-widest uppercase">Scroll to explore</span>
           </motion.div>
-        </div>
-      </div>
 
-      {/* Bottom info strip */}
-      <div className="relative z-10 border-t border-cream/10 bg-crimson/40 backdrop-blur-sm">
-        <div className="shell py-4">
-          <div className="frame flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <p className="text-xs tracking-widest uppercase text-cream/40">
-              South Indian Heritage Jewelry House
-            </p>
-            <p className="text-xs tracking-widest uppercase text-cream/40">
-              Mylapore, Chennai — Est. by D.K. Murthy
-            </p>
-            <p className="text-xs tracking-widest uppercase text-gold/60">
-              Heirloom Jewels Crafted to Endure
-            </p>
-          </div>
+          {/* ── Heading — always visible, nudges up on hover ── */}
+          <motion.h1
+            initial={false}
+            animate={hovered ? { y: -6, color: "#D3af37" } : { y: 0, color: "#faf8ed" }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            className="text-center leading-none whitespace-nowrap select-none"
+            style={{
+              fontFamily: '"Cormorant Garamond", Georgia, serif',
+              fontSize: "clamp(1.6rem, 5.2vw, 5.5rem)",
+              fontWeight: 400,
+              letterSpacing: "-0.01em",
+            }}
+          >
+            {hero.heading}
+          </motion.h1>
+
+          {/* Hover hint line under heading */}
+          <motion.div
+            initial={false}
+            animate={hovered ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-3 h-px bg-gold/60"
+            style={{ width: "min(480px, 60vw)", transformOrigin: "center" }}
+          />
         </div>
       </div>
     </section>
@@ -525,7 +535,7 @@ function FinalSection() {
                 ))}
               </div>
               <motion.div variants={staggerItem} className="mt-8">
-                <span className="script-brand text-gold text-3xl">{brand.name}</span>
+                <span className="script-brand text-gold whitespace-nowrap" style={{ fontSize: "clamp(1.1rem, 2.2vw, 1.8rem)" }}>{brand.fullName}</span>
               </motion.div>
             </motion.div>
           </div>

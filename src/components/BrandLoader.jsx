@@ -34,15 +34,11 @@ export default function BrandLoader() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-col items-center"
+          className="flex items-baseline justify-center"
         >
-          <span className="script-brand text-crimson"
-            style={{ fontSize: "clamp(3.5rem, 10vw, 7rem)", lineHeight: 1 }}>
-            {brand.name}
-          </span>
-          <span className="font-display italic text-forest/60 mt-1"
-            style={{ fontSize: "clamp(1rem, 2.5vw, 1.5rem)", letterSpacing: "0.18em" }}>
-            {brand.tagline}
+          <span className="script-brand text-crimson whitespace-nowrap"
+            style={{ fontSize: "clamp(2.5rem, 7vw, 5rem)", lineHeight: 1 }}>
+            {brand.fullName}
           </span>
         </motion.div>
 

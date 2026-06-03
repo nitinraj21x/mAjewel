@@ -29,24 +29,18 @@ export default function Navbar() {
           <Link
             to="/"
             onClick={() => setOpen(false)}
-            className="flex flex-col leading-none"
+            className="flex items-baseline leading-none"
           >
             <span
-              className="script-brand text-crimson"
-              style={{ fontSize: "clamp(1.6rem, 3vw, 2.2rem)", lineHeight: 1 }}
+              className="script-brand text-crimson whitespace-nowrap"
+              style={{ fontSize: "clamp(1.1rem, 2.2vw, 1.6rem)", lineHeight: 1 }}
             >
-              {brand.name}
-            </span>
-            <span
-              className="font-sans text-forest/50 tracking-widest"
-              style={{ fontSize: "0.55rem", letterSpacing: "0.3em", textTransform: "uppercase" }}
-            >
-              {brand.tagline}
+              {brand.fullName}
             </span>
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className={`hidden lg:flex items-center gap-8 ${scrolled ? "nav-scrolled" : ""}`}>
             {navigation.map((item) => (
               <NavLink
                 key={item.href}
